@@ -217,3 +217,34 @@ Just copy from this repository and place it into `src/main/resources/META-INF/re
 $> cd src/main/resources/META-INF/resources
 $> wget https://raw.githubusercontent.com/wpernath/quarkus-worldtour/main/src/main/resources/META-INF/resources/index.html
 ```
+
+
+## Moving quarkus to kubernetes
+Quarkus has everything build in. Just add another extension
+
+```bash
+$> mvn quarkus:add-extension -Dextensions="quarkus-container-image-jib"
+```
+
+Change defaults with new application.properties props:
+
+```
+# Container image build 
+quarkus.container-image.image=quay.io/wpernath/demo-jar
+quarkus.container-image.build=true
+quarkus.container-image.push=true
+quarkus.native.container-build=true
+quarkus.container-image.builder=jib
+```
+
+And execute:
+```bash
+$> mvn package -DskipTests
+```
+
+We now have our demo-jar image build and pushed to quay.io. Let's consume it now.
+
+## make it native
+```bash
+$> mvn clean package -DskipTests -Pnative
+```
