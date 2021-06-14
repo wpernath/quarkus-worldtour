@@ -1,0 +1,169 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>QUARKUS DB DEMO</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/wingcss/0.1.8/wing.min.css"/>
+    <style>
+        input[type=number] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            -webkit-transition: .5s;
+            transition: .5s;
+            outline: 0;
+            font-family: 'Open Sans', serif;
+        }
+    </style>
+    <!-- Load AngularJS -->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script type="text/javascript">
+      var app = angular.module("PersonManagement", []);
+
+      //Controller Part
+      app.controller("PersonManagementController", function ($scope, $http) {
+
+        //Initialize page with default data which is blank in this example
+        $scope.persons = [];
+
+        $scope.form = {
+          id: -1,
+          firstName: "",
+          lastName: "",
+          salutation: ""
+        };
+
+        //Now load the data from server
+        _refreshPageData();
+
+        //HTTP POST/PUT methods for add/edit fruits
+        $scope.update = function () {
+          var method = "";
+          var url = "";
+          var data = {};
+          if ($scope.form.id == -1) {
+            //Id is absent so add fruits - POST operation
+            method = "POST";
+            url = '/persons';
+            data.salutation = $scope.form.salutation;
+            data.firstName = $scope.form.firstName;
+            data.lastName = $scope.form.lastName;
+
+          } else {
+            //If Id is present, it's edit operation - PUT operation
+            method = "PUT";
+            url = '/persons/' + $scope.form.id;
+            data.salutation = $scope.form.salutation;
+            data.firstName = $scope.form.firstName;
+            data.lastName = $scope.form.lastName;
+          }
+
+          $http({
+            method: method,
+            url: url,
+            data: angular.toJson(data),
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }).then(_success, _error);
+        };
+
+        //HTTP DELETE- delete fruit by id
+        $scope.remove = function (person) {
+          $http({
+            method: 'DELETE',
+            url: '/persons/' + person.id
+          }).then(_success, _error);
+        };
+
+        //In case of edit fruits, populate form with fruit data
+        $scope.edit = function (person) {
+          $scope.form.salutation = person.salutation;
+          $scope.form.firstName = person.firstName;
+          $scope.form.lastName = person.lastName;
+          $scope.form.id = person.id;
+        };
+
+          /* Private Methods */
+        //HTTP GET- get all fruits collection
+        function _refreshPageData() {
+          $http({
+            method: 'GET',
+            url: '/persons'
+          }).then(function successCallback(response) {
+            $scope.persons = response.data;
+          }, function errorCallback(response) {
+            console.log(response.statusText);
+          });
+        }
+
+        function _success(response) {
+          _refreshPageData();
+          _clearForm()
+        }
+
+        function _error(response) {
+          alert(response.data.message || response.statusText);
+        }
+
+        //Clear the form
+        function _clearForm() {
+          $scope.form.salutation = "";
+          $scope.form.firstName = "";
+          $scope.form.lastName = "";
+          $scope.form.id = -1;
+        }
+      });
+    </script>
+</head>
+<body ng-app="PersonManagement" ng-controller="PersonManagementController">
+
+<div class="container">
+    <h1>Quarkus World Tour - Hibernate ORM with Panache</h1>
+    <p>This is a quick demo for the Quarkus World Tour to showcase how easy it is to create a web app which is 
+      using hibernate-orm with Panache and REST endpoints.
+    </p>
+    <p>Behind the scenes, we have:
+        <ul>
+            <li>Hibernate ORM with Panache taking care of all CRUD operations</li>
+            <li>RESTEasy powering the REST API</li>
+            <li>ArC, a CDI based dependency injection framework</li>
+            <li>the Narayana Transaction Manager coordinating all transactions</li>
+            <li>Agroal, the high performance Datasource implementation</li>
+            <li>Infinispan used as Hibernate 2nd level caching: enabled on both entities and queries</li>
+            <li>The Undertow webserver</li>
+            <li>Some magic bytecode generation plugged in the compiler...</li>
+        </ul>
+    </p>
+
+    <h3>Add/Edit a person</h3>
+    <form ng-submit="update()">
+        <div class="row">
+            <div class="col-2"><input type="text" placeholder="Salutation" ng-model="form.salutation" size="10"/></div>
+            <div class="col-3"><input type="text" placeholder="First Name" ng-model="form.firstName" size="30" /></div>
+            <div class="col-3"><input type="text" placeholder="Last Name" ng-model="form.lastName" size="30" /></div>
+        </div>
+        <input type="submit" value="Save"/>
+    </form>
+
+    <h3>Person List</h3>
+    <div class="row">
+        <div class="col-2"><b>Salutation</b></div>
+        <div class="col-2"><b>First Name</b></div>
+        <div class="col-2"><b>Last Name</b></div>        
+    </div>
+    <div class="row" ng-repeat="person in persons">
+        <div class="col-2">{{ person.salutation }}</div>
+        <div class="col-2">{{ person.firstName }}</div>
+        <div class="col-2">{{ person.lastName }}</div>
+        <div class="col-5"><a ng-click="edit( person )" class="btn">Edit</a> <a ng-click="remove( person )" class="btn">Remove</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
