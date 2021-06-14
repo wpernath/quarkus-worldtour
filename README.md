@@ -153,3 +153,46 @@ Create a HelloResource, move everything in there and use the PersonResource for 
 $> curl http://localhost:8080/persons
 [{"id":1,"firstName":"Wanja","lastName":"Pernath","salutation":"Mr"},{"id":2,"firstName":"Bobby","lastName":"Brown","salutation":"Mr"},{"id":3,"firstName":"Elvis","lastName":"Presley","salutation":"Mr"}]
 ```
+
+As you can see, as soon as you're adding the extensions to your project, quarkus:dev automatically starts a postgresql database as a docker container (if you have docker desktop installed). Which makes playing with your first db app very easy.
+
+### Adding POST, PUT and DELETE 
+POST
+```java
+    @POST
+    @Transactional
+    public Response create(Person p) {
+        if( p == null || p.id != null ) throw new WebApplicationException("id != null");
+        p.persist();
+        return Response.ok(p).status(200).build();
+    }
+```
+
+PUT
+```java
+    @PUT
+    @Transactional
+    @Path("{id}")
+    public Person update(@PathParam Long id, Person p) {
+        Person entity = Person.findById(id);
+        entity.salutation = p.salutation;
+        entity.firstName = p.firstName;
+        entity.lastName = p.lastName;
+        return entity;
+    }
+```
+
+DELETE
+```java
+    @DELETE
+    @Path("{id}")
+    @Transactional
+    public Response delete(@PathParam Long id) {
+        Person entity = Person.findById(id);
+        if (entity == null) {
+            throw new WebApplicationException("Fruit with id of " + id + " does not exist.", 404);
+        }
+        entity.delete();
+        return Response.status(204).build();
+    }
+```
