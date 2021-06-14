@@ -11,11 +11,11 @@ Here is a step by step doc how to reproduce the code.
 Either go to https://code.quarkus.io/ and create your skeleton or execute the following
 
 ```bash
-$> mvn io.quarkus:quarkus-maven-plugin:1.13.7.Final:create \
-       -DprojectGroupId=org.wanja.demo \ 
-       -DprojectArtifactId=demo \
-       -DclassName="org.wanja.quarkus.demo.PersonResource" \       
-       -Dpath="/persons"
+$>  mvn io.quarkus:quarkus-maven-plugin:1.13.7.Final:create \
+    -DprojectGroupId=org.wanja.demo \
+    -DprojectArtifactId=demo \
+    -DclassName="org.wanja.quarkus.demo.PersonResource" \
+    -Dpath="/persons"
 ```
 
 Now cd into the created project and open the complete folder with your preferred IDE.
@@ -69,5 +69,71 @@ message.hello=Huhu, Quarkus is so coool!
 
 And make sure that `hello` and `helloDu` are consuming that property instead of the hard coded string
 
+See: https://quarkus.io/guides/config-reference
 
-## Adding a database
+## Working with a Database / PanacheEntity
+Until now, it haven't been necessary to restart quarkus:dev. Every change to your code immediately reflected in a recompilation. Now we are extending the pom, as we are adding some more dependencies to the sauce. It might be that you now have to close quarkus:dev and restart it. 
+
+Dependencies:
+
+see: https://quarkus.io/guides/hibernate-orm#setting-up-and-configuring-hibernate-orm
+and: https://quarkus.io/guides/hibernate-orm-panache
+
+### Adding dependencies
+
+```bash
+$> mvn quarkus:add-extension -Dextensions="quarkus-hibernate-orm-panache,quarkus-jdbc-postgresql"
+```
+
+### Adding database properties
+Add the following properties to your application.properties
+
+```
+# Datasource options
+%prod.quarkus.datasource.db-kind=postgresql
+%prod.quarkus.datasource.username=wanja
+%prod.quarkus.datasource.password=wanja
+%prod.quarkus.datasource.jdbc.url=jdbc:postgresql://localhost/wanjadb
+%prod.quarkus.datasource.jdbc.max-size=8
+%prod.quarkus.datasource.jdbc.min-size=2
+
+quarkus.hibernate-orm.database.generation=drop-and-create
+quarkus.hibernate-orm.log.sql=true
+quarkus.hibernate-orm.sql-load-script=import.sql
+```
+
+https://quarkus.io/guides/datasource
+
+### Add an import.sql file to src/main/resources
+```sql
+insert into person(id, first_name, last_name, salutation) values (nextval('hibernate_sequence'), 'Wanja', 'Pernath', 'Mr');
+insert into person(id, first_name, last_name, salutation) values (nextval('hibernate_sequence'), 'Bobby', 'Brown', 'Mr');
+insert into person(id, first_name, last_name, salutation) values (nextval('hibernate_sequence'), 'Elvis', 'Presley', 'Mr');
+```
+
+### Add the entity
+```java
+package org.wanja.quarkus.demo;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
+
+@Entity
+public class Person extends PanacheEntity {
+    
+    @Column(name = "first_name")
+    public String firstName;
+
+    @Column(name = "last_name")
+    public String lastName;
+
+    @Column(name = "salutation")
+    public String salutation;
+
+}
+```
+
+That's it. This is the entity. You don't have to specify getters and setters. 
+
