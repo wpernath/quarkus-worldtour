@@ -112,6 +112,7 @@ insert into person(id, first_name, last_name, salutation) values (nextval('hiber
 ```
 
 ### Add the entity
+Add a new file in src/main/java/org/wanja/quarkus/demo/Person.java
 ```java
 package org.wanja.quarkus.demo;
 
@@ -137,3 +138,18 @@ public class Person extends PanacheEntity {
 
 That's it. This is the entity. You don't have to specify getters and setters. 
 
+### Create a PersonResource.java
+Create a HelloResource, move everything in there and use the PersonResource for database access. We first just want to list all entities from the db
+
+```java
+    @GET
+    public List<Person> listAllJson() {
+        List<Person> persons = Person.findAll().list();
+        return persons;
+    }
+```
+
+```bash
+$> curl http://localhost:8080/persons
+[{"id":1,"firstName":"Wanja","lastName":"Pernath","salutation":"Mr"},{"id":2,"firstName":"Bobby","lastName":"Brown","salutation":"Mr"},{"id":3,"firstName":"Elvis","lastName":"Presley","salutation":"Mr"}]
+```
