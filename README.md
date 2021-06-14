@@ -151,10 +151,23 @@ Create a HelloResource, move everything in there and use the PersonResource for 
 
 ```bash
 $> curl http://localhost:8080/persons
+Could not find MessageBodyWriter for response object of type: java.util.ArrayList of media type: application/json
+```
+
+This is because, we are missing a dependency: quarkus-resteasy-jsonb (or quarkus-resteasy-jackson) which automates everything for us.
+
+```bash
+$> mvn quarkus:add-extension -Dextensions="quarkus-resteasy-jsonb"
+```
+
+And now we should be able to see
+```bash
+$> curl http://localhost:8080/persons
 [{"id":1,"firstName":"Wanja","lastName":"Pernath","salutation":"Mr"},{"id":2,"firstName":"Bobby","lastName":"Brown","salutation":"Mr"},{"id":3,"firstName":"Elvis","lastName":"Presley","salutation":"Mr"}]
 ```
 
 As you can see, as soon as you're adding the extensions to your project, quarkus:dev automatically starts a postgresql database as a docker container (if you have docker desktop installed). Which makes playing with your first db app very easy.
+
 
 ### Adding POST, PUT and DELETE 
 POST
@@ -195,4 +208,12 @@ DELETE
         entity.delete();
         return Response.status(204).build();
     }
+```
+
+### Adding a simple angular based index.html file 
+Just copy from this repository and place it into `src/main/resources/META-INF/resources/index.html` 
+
+```bash
+$> cd src/main/resources/META-INF/resources
+$> wget https://raw.githubusercontent.com/wpernath/quarkus-worldtour/main/src/main/resources/META-INF/resources/index.html
 ```
