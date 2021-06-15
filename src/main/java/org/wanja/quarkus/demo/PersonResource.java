@@ -52,7 +52,7 @@ public class PersonResource {
     public Response delete(@PathParam Long id) {
         Person entity = Person.findById(id);
         if (entity == null) {
-            throw new WebApplicationException("Fruit with id of " + id + " does not exist.", 404);
+            throw new WebApplicationException("Person with id of " + id + " does not exist.", 404);
         }
         entity.delete();
         return Response.status(204).build();

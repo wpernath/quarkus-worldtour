@@ -15,14 +15,13 @@ public class HelloResource {
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    @Path("hello")
     public String hello() {
         return configHello;
     }
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    @Path("hello/du/{name}")
+    @Path("du/{name}")
     public String helloDu(@PathParam String name) {
         return configHello + ", " + name;
     }
