@@ -284,7 +284,7 @@ Click again on "+Add", choose "Container Image" and provide the URL of your imag
 - Choose "Create a route to the application"
 - On the bottom, click on "Deployment" link to add an Environment variable
 - Name: QUARKUS_DATASOURCE_JDBC_URL
-- Value: jdbc:postgresql://<postgresql service name>/wanjadb (in my case "postgresql")
+- Value: jdbc:postgresql://postgresql/wanjadb (in my case "postgresql")
 - Click on "Create"
 
 After a short while, your app is deployed and can be tested.
