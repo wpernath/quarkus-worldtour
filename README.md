@@ -11,7 +11,7 @@ Here is a step by step doc how to reproduce the code.
 Either go to https://code.quarkus.io/ and create your skeleton or execute the following
 
 ```bash
-$>  mvn io.quarkus:quarkus-maven-plugin:1.13.7.Final:create \
+$>  mvn io.quarkus:quarkus-maven-plugin:2.0.2.Final:create \
     -DprojectGroupId=org.wanja.demo \
     -DprojectArtifactId=demo \
     -DclassName="org.wanja.quarkus.demo.HelloResource" \
@@ -105,8 +105,12 @@ https://quarkus.io/guides/datasource
 
 ### Add an import.sql file to src/main/resources
 ```sql
-insert into person(id, first_name, last_name, salutation) values (nextval('hibernate_sequence'), 'Wanja', 'Pernath', 'Mr');
+insert into person(id, first_name, last_name, salutation) values (nextval('hibernate_sequence'), 'Doro', 'Pesch', 'Mrs');
 insert into person(id, first_name, last_name, salutation) values (nextval('hibernate_sequence'), 'Bobby', 'Brown', 'Mr');
+insert into person(id, first_name, last_name, salutation) values (nextval('hibernate_sequence'), 'Elvis', 'Presley', 'Mr');
+insert into person(id, first_name, last_name, salutation) values (nextval('hibernate_sequence'), 'Curt', 'Cobain', 'Mr');
+insert into person(id, first_name, last_name, salutation) values (nextval('hibernate_sequence'), 'Nina', 'Hagen', 'Mrs');
+insert into person(id, first_name, last_name, salutation) values (nextval('hibernate_sequence'), 'Jimmi', 'Henrix', 'Mr');
 insert into person(id, first_name, last_name, salutation) values (nextval('hibernate_sequence'), 'Elvis', 'Presley', 'Mr');
 ```
 
@@ -215,7 +219,7 @@ DELETE
     public Response delete(@PathParam Long id) {
         Person entity = Person.findById(id);
         if (entity == null) {
-            throw new WebApplicationException("Fruit with id of " + id + " does not exist.", 404);
+            throw new WebApplicationException("Person with id of " + id + " does not exist.", 404);
         }
         entity.delete();
         return Response.status(204).build();
