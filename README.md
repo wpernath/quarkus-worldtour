@@ -11,7 +11,7 @@ Here is a step by step doc how to reproduce the code.
 Either go to https://code.quarkus.io/ and create your skeleton or execute the following
 
 ```bash
-$>  mvn io.quarkus:quarkus-maven-plugin:2.0.2.Final:create \
+$>  mvn io.quarkus:quarkus-maven-plugin:2.2.3.Final:create \
     -DprojectGroupId=org.wanja.demo \
     -DprojectArtifactId=demo \
     -DclassName="org.wanja.quarkus.demo.HelloResource" \
@@ -111,7 +111,7 @@ insert into person(id, first_name, last_name, salutation) values (nextval('hiber
 insert into person(id, first_name, last_name, salutation) values (nextval('hibernate_sequence'), 'Curt', 'Cobain', 'Mr');
 insert into person(id, first_name, last_name, salutation) values (nextval('hibernate_sequence'), 'Nina', 'Hagen', 'Mrs');
 insert into person(id, first_name, last_name, salutation) values (nextval('hibernate_sequence'), 'Jimmi', 'Henrix', 'Mr');
-insert into person(id, first_name, last_name, salutation) values (nextval('hibernate_sequence'), 'Elvis', 'Presley', 'Mr');
+insert into person(id, first_name, last_name, salutation) values (nextval('hibernate_sequence'), 'Janis', 'Joplin', 'Mrs');
 ```
 
 ### Add the entity
@@ -139,7 +139,7 @@ public class Person extends PanacheEntity {
 }
 ```
 
-That's it. This is the entity. You don't have to specify getters and setters. 
+That's it. This is the entity. You don't have to specify any getters and setters. 
 
 ### Create a PersonResource.java
 Create a PersonResource, which listens on /persons and Consumes and Produces only JSON. 
@@ -176,7 +176,7 @@ $> mvn quarkus:add-extension -Dextensions="quarkus-resteasy-jsonb"
 And now we should be able to see
 ```bash
 $> curl http://localhost:8080/persons
-[{"id":1,"firstName":"Wanja","lastName":"Pernath","salutation":"Mr"},{"id":2,"firstName":"Bobby","lastName":"Brown","salutation":"Mr"},{"id":3,"firstName":"Elvis","lastName":"Presley","salutation":"Mr"}]
+[{"id":1,"firstName":"Doro","lastName":"Pesch","salutation":"Mrs"},{"id":2,"firstName":"Bobby","lastName":"Brown","salutation":"Mr"},{"id":3,"firstName":"Elvis","lastName":"Presley","salutation":"Mr"},{"id":4,"firstName":"Curt","lastName":"Cobain","salutation":"Mr"},{"id":5,"firstName":"Nina","lastName":"Hagen","salutation":"Mrs"},{"id":6,"firstName":"Jimmi","lastName":"Henrix","salutation":"Mr"},{"id":7,"firstName":"Jannis","lastName":"Joplin","salutation":"Mrs"},{"id":8,"firstName":"Joe","lastName":"Cocker","salutation":"Mr"}]
 ```
 
 As you can see, as soon as you're adding the extensions to your project, quarkus:dev automatically starts a postgresql database as a docker container (if you have docker desktop installed). Which makes playing with your first db app very easy.
