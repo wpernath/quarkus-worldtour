@@ -11,7 +11,7 @@ Here is a step by step doc how to reproduce the code.
 Either go to https://code.quarkus.io/ and create your skeleton or execute the following
 
 ```bash
-$>  mvn io.quarkus:quarkus-maven-plugin:2.2.3.Final:create \
+$>  mvn io.quarkus:quarkus-maven-plugin:2.5.1.Final:create \
     -DprojectGroupId=org.wanja.demo \
     -DprojectArtifactId=demo \
     -DclassName="org.wanja.quarkus.demo.HelloResource" \
@@ -43,14 +43,14 @@ Note, a curl to http://localhost:8080/hello will immediately give you the return
 ```java
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    @Path("du/{name}")
-    public String helloDu(@PathParam String name) {
+    @Path("you/{name}")
+    public String helloYou(@PathParam String name) {
         return "huhu" + ", " + name;
     }
 ```
 
 ```bash
-$> curl http://localhost:8080/hello/wanja
+$> curl http://localhost:8080/hello/you/wanja
 wanja
 ```
 
@@ -66,7 +66,7 @@ In the application.properties you're able to configure that string
 message.hello=Huhu, Quarkus is so coool!
 ```
 
-And make sure that `hello` and `helloDu` are consuming that property instead of the hard coded string
+And make sure that `hello` and `helloYou` are consuming that property instead of the hard coded string
 
 See: https://quarkus.io/guides/config-reference
 
