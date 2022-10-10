@@ -125,7 +125,7 @@ insert into person(id, first_name, last_name, salutation) values (nextval('hiber
 ```
 
 ### Add the entity
-Add a new file in src/main/java/org/wanja/quarkus/demo/Person.java
+Add a new file in `src/main/java/com/redhat/demo/Person.java`
 ```java
 package com.redhat.demo;
 
