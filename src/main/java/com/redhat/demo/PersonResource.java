@@ -1,4 +1,4 @@
-package org.wanja.quarkus.demo;
+package com.redhat.demo;
 
 import java.util.List;
 

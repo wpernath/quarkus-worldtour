@@ -1,4 +1,4 @@
-package org.wanja.quarkus.demo;
+package com.redhat.demo;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

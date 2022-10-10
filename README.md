@@ -8,22 +8,30 @@ If you want to learn more about Quarkus, please visit its website: https://quark
 Here is a step by step doc how to reproduce the code. 
 
 ### bootstrapping the code
-Either go to https://code.quarkus.io/ and create your skeleton or execute the following
+Either go to https://code.quarkus.io/ and create your skeleton or execute one of the following
 
 ```bash
-$>  mvn io.quarkus:quarkus-maven-plugin:2.5.1.Final:create \
-    -DprojectGroupId=org.wanja.demo \
-    -DprojectArtifactId=demo \
-    -DclassName="org.wanja.quarkus.demo.HelloResource" \
-    -Dpath="/hello"
+$>  mvn io.quarkus:quarkus-maven-plugin:2.13.1.Final:create \
+    -DprojectGroupId=com.redhat.demo \
+    -DprojectArtifactId=demo-service 
+```
+
+or 
+```bash 
+$> quarkus create app com.redhat.demo:demo-service:0.0.1
 ```
 
 Now cd into the created project and open the complete folder with your preferred IDE.
 
 ### First steps
-Open the HelloResource file and have a look at its structure. With 
+Open the `GreetingResource.java` file and have a look at its structure. With 
 ```bash 
 $> mvn compile quarkus:dev
+```
+
+or
+```bash 
+$> quarkus dev
 ```
 
 You're going to start your local quarkus execution server. 
@@ -39,18 +47,20 @@ You're going to start your local quarkus execution server.
 
 Note, a curl to http://localhost:8080/hello will immediately give you the return. Quarkus recompiles everything in the background.
 
+For the sake of simplicity, I am going to use [httpie](https://httpie.io/cli) from now on, which is IMHO easier to use than `curl`.
+
 ### Adding another method
 ```java
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("you/{name}")
     public String helloYou(@PathParam String name) {
-        return "huhu" + ", " + name;
+        return "hi" + ", " + name;
     }
 ```
 
 ```bash
-$> curl http://localhost:8080/hello/you/wanja
+$> http :8080/hello/you/wanja
 wanja
 ```
 
@@ -63,7 +73,7 @@ Add the following microprofile annotated String
 
 In the application.properties you're able to configure that string
 ```java
-message.hello=Huhu, Quarkus is so coool!
+message.hello=Hi, Quarkus is so coool!
 ```
 
 And make sure that `hello` and `helloYou` are consuming that property instead of the hard coded string
@@ -117,7 +127,7 @@ insert into person(id, first_name, last_name, salutation) values (nextval('hiber
 ### Add the entity
 Add a new file in src/main/java/org/wanja/quarkus/demo/Person.java
 ```java
-package org.wanja.quarkus.demo;
+package com.redhat.demo;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -163,7 +173,7 @@ We first just want to list all entities from the db
 ```
 
 ```bash
-$> curl http://localhost:8080/persons
+$> http :8080/persons
 Could not find MessageBodyWriter for response object of type: java.util.ArrayList of media type: application/json
 ```
 
@@ -175,7 +185,7 @@ $> mvn quarkus:add-extension -Dextensions="quarkus-resteasy-jsonb"
 
 And now we should be able to see
 ```bash
-$> curl http://localhost:8080/persons
+$> http :8080/persons
 [{"id":1,"firstName":"Doro","lastName":"Pesch","salutation":"Mrs"},{"id":2,"firstName":"Bobby","lastName":"Brown","salutation":"Mr"},{"id":3,"firstName":"Elvis","lastName":"Presley","salutation":"Mr"},{"id":4,"firstName":"Curt","lastName":"Cobain","salutation":"Mr"},{"id":5,"firstName":"Nina","lastName":"Hagen","salutation":"Mrs"},{"id":6,"firstName":"Jimmi","lastName":"Henrix","salutation":"Mr"},{"id":7,"firstName":"Jannis","lastName":"Joplin","salutation":"Mrs"},{"id":8,"firstName":"Joe","lastName":"Cocker","salutation":"Mr"}]
 ```
 
