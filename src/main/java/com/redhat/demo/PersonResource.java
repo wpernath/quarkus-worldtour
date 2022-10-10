@@ -14,7 +14,6 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.jboss.resteasy.annotations.jaxrs.PathParam;
 
 @Path("/persons")
 @Produces(MediaType.APPLICATION_JSON)
@@ -37,8 +36,8 @@ public class PersonResource {
 
     @PUT
     @Transactional
-    @Path("{id}")
-    public Person update(@PathParam Long id, Person p) {
+    @Path("/{id}")
+    public Person update(Long id, Person p) {
         Person entity = Person.findById(id);
         entity.salutation = p.salutation;
         entity.firstName = p.firstName;
@@ -49,7 +48,7 @@ public class PersonResource {
     @DELETE
     @Path("{id}")
     @Transactional
-    public Response delete(@PathParam Long id) {
+    public Response delete(Long id) {
         Person entity = Person.findById(id);
         if (entity == null) {
             throw new WebApplicationException("Person with id of " + id + " does not exist.", 404);
